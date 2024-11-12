@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: my-golang-app
+    build: .
+    ports:
+      - "8082:80"
+    networks:
+      - net_my_compose_HafizJuliant
+    depends_on:
+      - database
+    environment:
+      - DB_HOST=localhost
+      - DB_PORT=5434
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+
+  database:
+    container_name: database
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5434:5432" # Exposing PostgreSQL on port 5435 on the host
+    networks:
+      - net_my_compose_HafizJuliant
+    volumes:
+      - vol_my_compose_HafizJuliant:/var/lib/postgresql/data
+
+networks:
+  net_my_compose_HafizJuliant:
+    driver: bridge
+
+volumes:
+  vol_my_compose_HafizJuliant:
